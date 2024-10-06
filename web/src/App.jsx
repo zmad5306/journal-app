@@ -6,12 +6,9 @@ import EditEntry from "./components/EditEntry";
 import NewEntry from "./components/NewEntry";
 import ReadEntry from "./components/ReadEntry";
 import Login from "./components/Login";
-import { GlobalContext } from "./components/GlobalProvider";
 
 function App() {
   const [credentialResponse, setCredentialResponse] = useState({});
-  const { globalState, setGlobalState } = useContext(GlobalContext);
-
   return credentialResponse.credential ? (
     <Router>
       <div className="container mt-5">
@@ -28,7 +25,6 @@ function App() {
       onSuccess={(credentialResponse) => {
         document.cookie = `token=${credentialResponse.credential}`;
         setCredentialResponse(credentialResponse);
-        setGlobalState({ ...globalState, credentialResponse });
       }}
     ></Login>
   );

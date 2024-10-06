@@ -1,31 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { GlobalContext } from "./GlobalProvider";
 
 function Home() {
   const [entries, setEntries] = useState([]);
-  const { globalState, setGlobalState } = useContext(GlobalContext);
 
   useEffect(() => {
-    if (globalState.credentialResponse) {
-      fetch("/secure/entries")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              "Network response was not ok " + response.statusText
-            );
-          }
-          return response.json();
-        })
-        .then((fetchedEntries) => {
-          setEntries(fetchedEntries);
-          console.log("fetchedEntries", fetchedEntries);
-        })
-        .catch((error) => {
-          console.error("Error fetching entries", error);
-          alert("Unable to load entries");
-        });
-    }
+    fetch("/secure/entries")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((fetchedEntries) => {
+        setEntries(fetchedEntries);
+        console.log("fetchedEntries", fetchedEntries);
+      })
+      .catch((error) => {
+        console.error("Error fetching entries", error);
+        alert("Unable to load entries");
+      });
   }, []);
 
   return (

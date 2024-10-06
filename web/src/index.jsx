@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { GlobalProvider } from "./components/GlobalProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ApiRoutes } from "./config";
 
@@ -14,10 +13,8 @@ const config = await (async () => {
 
 root.render(
   <React.StrictMode>
-    <GlobalProvider>
-      <GoogleOAuthProvider clientId={config.GOOGLE_OAUTH_CLIENT_ID}>
-        <App />
-      </GoogleOAuthProvider>
-    </GlobalProvider>
+    <GoogleOAuthProvider clientId={config.GOOGLE_OAUTH_CLIENT_ID}>
+      <App />
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
