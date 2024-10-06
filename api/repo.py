@@ -1,8 +1,9 @@
 from pymongo import MongoClient
 from datetime import datetime
 from bson.objectid import ObjectId, InvalidId
+import os
 
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient(os.getenv('MONGO_URL'))
 db = client['journal']
 
 def get_objectId(id):
