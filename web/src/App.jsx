@@ -12,6 +12,7 @@ function App() {
   const [token, setToken] = useState(Cookies.get("token"));
   const [loggingIn, setLoggingIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [lastTokenCheckTime, setLastTokenCheckTime] = useState(new Date());
 
   function checkToken() {
     fetch("/secure/token").then((response) => {
@@ -19,27 +20,15 @@ function App() {
         setLoggedIn(true);
         setLoggingIn(false);
       }
+      setTimeout(() => setLastTokenCheckTime(new Date()), 1000); // triggers useEffect to re-check token
     });
   }
 
-  function waitForToken(tries) {
-    if (tries < 5) {
-      checkToken();
-      setTimeout(() => {
-        waitForToken(tries + 1);
-      }, 1000);
-    }
-  }
-
   useEffect(() => {
-    console.log("EXECUTING USE EFFECT!!!!!!");
-    if (token) {
-      checkToken();
-      if (loggingIn && !loggedIn) {
-        waitForToken(0);
-      }
+    if (token && !loggedIn) {
+      checkToken(); // TOOD invalid token causes infinite loop here...
     }
-  }, [token, loggingIn, loggedIn]);
+  }, [token, loggingIn, loggedIn, lastTokenCheckTime]);
 
   return (
     <>
