@@ -10,26 +10,40 @@ import Cookies from "js-cookie";
 
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
+  const [loggingIn, setLoggingIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (token) {
-      fetch("/secure/token")
-        .then((response) => {
-          if (response.ok) {
-            return true;
-          }
-          return false;
-        })
-        .then((loggedInResult) => {
-          setLoggedIn(loggedInResult);
-        });
+  function checkToken() {
+    fetch("/secure/token").then((response) => {
+      if (response.ok) {
+        setLoggedIn(true);
+        setLoggingIn(false);
+      }
+    });
+  }
+
+  function waitForToken(tries) {
+    if (tries < 5) {
+      checkToken();
+      setTimeout(() => {
+        waitForToken(tries + 1);
+      }, 1000);
     }
-  }, [token]);
+  }
+
+  useEffect(() => {
+    console.log("EXECUTING USE EFFECT!!!!!!");
+    if (token) {
+      checkToken();
+      if (loggingIn && !loggedIn) {
+        waitForToken(0);
+      }
+    }
+  }, [token, loggingIn, loggedIn]);
 
   return (
     <>
-      {loggedIn ? (
+      {loggedIn && (
         <Router>
           <div className="container mt-5">
             <Routes>
@@ -40,15 +54,18 @@ function App() {
             </Routes>
           </div>
         </Router>
-      ) : (
+      )}
+      {!loggedIn && !loggingIn && (
         <Login
           onSuccess={(credentialResponse) => {
             Cookies.set("token", credentialResponse.credential, { path: "/" });
             setToken(credentialResponse.credential);
-            setLoggedIn(true);
+            setLoggingIn(true);
+            // poll back end with token until we get a positive response
           }}
         ></Login>
       )}
+      {loggingIn && <p>You are being logged in</p>}
     </>
   );
 }
