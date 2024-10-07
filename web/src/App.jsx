@@ -20,7 +20,7 @@ function App() {
         setLoggedIn(true);
         setLoggingIn(false);
       }
-      setTimeout(() => setLastTokenCheckTime(new Date()), 1000); // triggers useEffect to re-check token
+      setTimeout(() => setLastTokenCheckTime(new Date()), 1000); // triggers useEffect to re-check token, this accounts for lag on Google end
     });
   }
 
