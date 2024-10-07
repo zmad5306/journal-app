@@ -12,21 +12,23 @@ function App() {
   const [token, setToken] = useState(Cookies.get("token"));
   const [loggedIn, setLoggedIn] = useState(false);
 
+  // checks if the token cookie already contains a valid token
+  //by submitting token to backend for validation
   if (token) {
     fetch("/secure/token")
       .then((response) => {
-        console.log("response", response);
         if (response.ok) {
           return true;
         }
         return false;
       })
       .then((loggedInResult) => {
-        console.log("loggedInResult", loggedInResult);
         setLoggedIn(loggedInResult);
       });
   }
 
+  // if the user is logged in render the app
+  // otherwise prompt for Google login
   return loggedIn ? (
     <Router>
       <div className="container mt-5">
@@ -41,7 +43,7 @@ function App() {
   ) : (
     <Login
       onSuccess={(credentialResponse) => {
-        document.cookie = `token=${credentialResponse.credential}`;
+        Cookies.set("token", credentialResponse.credential, { path: "/" });
         setToken(credentialResponse.credential);
         setLoggedIn(true);
       }}
