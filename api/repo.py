@@ -26,7 +26,7 @@ def create_entry(entry, user):
     return convert_id(entry)
 
 def find_entries(user):
-    cursor = get_collection(user).find()
+    cursor = get_collection(user).find().sort('createdDate', -1)
     entries = cursor.to_list(length=None)
     return list(map(convert_id, entries))
 
