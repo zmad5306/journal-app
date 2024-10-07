@@ -6,10 +6,28 @@ import EditEntry from "./components/EditEntry";
 import NewEntry from "./components/NewEntry";
 import ReadEntry from "./components/ReadEntry";
 import Login from "./components/Login";
+import Cookies from "js-cookie";
 
 function App() {
-  const [credentialResponse, setCredentialResponse] = useState({});
-  return credentialResponse.credential ? (
+  const [token, setToken] = useState(Cookies.get("token"));
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  if (token) {
+    fetch("/secure/token")
+      .then((response) => {
+        console.log("response", response);
+        if (response.ok) {
+          return true;
+        }
+        return false;
+      })
+      .then((loggedInResult) => {
+        console.log("loggedInResult", loggedInResult);
+        setLoggedIn(loggedInResult);
+      });
+  }
+
+  return loggedIn ? (
     <Router>
       <div className="container mt-5">
         <Routes>
@@ -24,7 +42,8 @@ function App() {
     <Login
       onSuccess={(credentialResponse) => {
         document.cookie = `token=${credentialResponse.credential}`;
-        setCredentialResponse(credentialResponse);
+        setToken(credentialResponse.credential);
+        setLoggedIn(true);
       }}
     ></Login>
   );
