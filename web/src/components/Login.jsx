@@ -3,7 +3,7 @@ import "./Login.css";
 
 function Login({ onSuccess }) {
   return (
-    <div class="login-button-container">
+    <div className="login-button-container">
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           onSuccess(credentialResponse);

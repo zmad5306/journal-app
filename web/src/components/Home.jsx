@@ -14,7 +14,6 @@ function Home() {
       })
       .then((fetchedEntries) => {
         setEntries(fetchedEntries);
-        console.log("fetchedEntries", fetchedEntries);
       })
       .catch((error) => {
         console.error("Error fetching entries", error);

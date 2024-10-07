@@ -6,10 +6,13 @@ import { ApiRoutes } from "./config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const config = await (async () => {
-  const response = await fetch(ApiRoutes.config);
-  return response.json();
-})();
+const config = await fetch(ApiRoutes.config).then((response) => {
+  if (response.ok) {
+    return response.json();
+  }
+  console.error("Could not get config", response);
+  return {};
+});
 
 root.render(
   <React.StrictMode>
