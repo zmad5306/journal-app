@@ -7,26 +7,30 @@ import NewEntry from "./components/NewEntry";
 import ReadEntry from "./components/ReadEntry";
 import Login from "./components/Login";
 import Cookies from "js-cookie";
+import LoginProcessing from "./components/LoginProcessing";
 
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
   const [loggingIn, setLoggingIn] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [lastTokenCheckTime, setLastTokenCheckTime] = useState(new Date());
+  const [first, setFirst] = useState(true);
 
-  function checkToken() {
+  function checkToken(first) {
     fetch("/secure/token").then((response) => {
       if (response.ok) {
         setLoggedIn(true);
         setLoggingIn(false);
       }
-      setTimeout(() => setLastTokenCheckTime(new Date()), 1000); // triggers useEffect to re-check token, this accounts for lag on Google end
+      if (!first) {
+        setTimeout(() => setLastTokenCheckTime(new Date()), 1000);
+      }
     });
   }
 
   useEffect(() => {
     if (token && !loggedIn) {
-      checkToken(); // TOOD invalid token causes infinite loop here...
+      checkToken(first);
     }
   }, [token, loggingIn, loggedIn, lastTokenCheckTime]);
 
@@ -50,11 +54,11 @@ function App() {
             Cookies.set("token", credentialResponse.credential, { path: "/" });
             setToken(credentialResponse.credential);
             setLoggingIn(true);
-            // poll back end with token until we get a positive response
+            setFirst(false);
           }}
         ></Login>
       )}
-      {loggingIn && <p>You are being logged in</p>}
+      {loggingIn && <LoginProcessing></LoginProcessing>}
     </>
   );
 }
