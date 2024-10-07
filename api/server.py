@@ -1,7 +1,7 @@
 from flask import Flask, request
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from google.auth.exceptions import InvalidValue
+from google.auth.exceptions import InvalidValue, MalformedError
 from dotenv import load_dotenv
 import os
 import repo
@@ -25,6 +25,8 @@ def check_auth():
                 user_info = id_token.verify_oauth2_token(token, requests.Request(), os.getenv('GOOGLE_OAUTH_CLIENT_ID'))
                 request.user = user_info
             except InvalidValue:
+                return token_invalid()
+            except MalformedError:
                 return token_invalid()
         else:
             return token_invalid()
@@ -52,6 +54,10 @@ def get_entry(id):
         return entry
     else:
         return not_found()
+    
+@app.route("/secure/token")
+def check_token():
+    return {'token_valid': True}, 200
 
 if __name__== "__main__":
     app.run(debug=True)
