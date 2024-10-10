@@ -1,5 +1,6 @@
 export const ApiRoutes = {
-  config: "/config",
-  entries: "/entries",
-  entry: "/entry",
+  config: "/api/config",
+  entries: "/api/secure/entries",
+  entry: "/api/secure/entry",
+  token: "/api/secure/token",
 };

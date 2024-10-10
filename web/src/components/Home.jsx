@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { ApiRoutes } from "../config";
 
 function Home() {
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
-    fetch("/secure/entries")
+    fetch(ApiRoutes.entries)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);

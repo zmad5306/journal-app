@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EntryForm from "./EntryForm";
+import { ApiRoutes } from "../config";
 
 function EditEntry() {
   const { id } = useParams();
@@ -8,7 +9,7 @@ function EditEntry() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/secure/entry/" + id)
+    fetch(ApiRoutes.entry + "/" + id)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);
@@ -25,7 +26,7 @@ function EditEntry() {
 
   const handleSave = (updatedEntry) => {
     updatedEntry.id = id;
-    fetch("/secure/entry", {
+    fetch(ApiRoutes.entry, {
       method: "PATCH",
       body: JSON.stringify(updatedEntry),
       headers: {

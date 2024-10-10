@@ -1,10 +1,11 @@
 import React from "react";
 import EntryForm from "./EntryForm";
+import { ApiRoutes } from "../config";
 
 function NewEntry() {
   const handleSave = (newEntry) => {
     newEntry.createdDate = new Date().toLocaleString();
-    fetch("/secure/entry", {
+    fetch(ApiRoutes.entry, {
       method: "PUT",
       body: JSON.stringify(newEntry),
       headers: {

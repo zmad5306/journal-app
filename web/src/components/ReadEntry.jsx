@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EntryDisplay from "./EntryDisplay";
+import { ApiRoutes } from "../config";
 
 function ReadEntry() {
   const { id } = useParams();
@@ -8,7 +9,7 @@ function ReadEntry() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/secure/entry/" + id)
+    fetch(ApiRoutes.entry + "/" + id)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);

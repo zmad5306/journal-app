@@ -8,6 +8,7 @@ import ReadEntry from "./components/ReadEntry";
 import Login from "./components/Login";
 import Cookies from "js-cookie";
 import LoginProcessing from "./components/LoginProcessing";
+import { ApiRoutes } from "./config";
 
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
@@ -17,7 +18,7 @@ function App() {
   const [first, setFirst] = useState(true);
 
   function checkToken(first) {
-    fetch("/secure/token").then((response) => {
+    fetch(ApiRoutes.token).then((response) => {
       if (response.ok) {
         setLoggedIn(true);
         setLoggingIn(false);
